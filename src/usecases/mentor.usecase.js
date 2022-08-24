@@ -1,23 +1,43 @@
 const Mentor = require("../models/mentor.model");
 
 //Use Cases = Handlers
-const get = (query) => {
-    const mentor = Mentor.find(query);
-    return mentor;
-}
-
-const create = (mentorData) => {
+const createMentor = (mentorData) => {
     const mentor = Mentor.create(mentorData);
     return mentor;
 }
 
-const update = (id, mentorData) => {
-    const mentor = Mentor.findByIdAndUpdate(id, mentorData, { returnDocument: 'after'});
+const getMentor = (id) => {
+    const mentor = Mentor.findById(id);
     return mentor;
 }
 
-const deleteMentor = (id) => {
-    return Mentor.findByIdAndDelete(id);     
+const allMentors = (filters) => {
+    const mentors = Mentor.find(filters);
+    return mentors;
 }
 
-module.exports = { get, create, update, deleteMentor }
+const updateMentor = (id, mentorData) => {
+    const mentor = Mentor.findByIdAndUpdate(id, mentorData, { returnDocument: "after", upsert: true });
+    return mentor;
+}
+
+const removeMentor = (id) => {
+    const mentor = Mentor.findByIdAndDelete(id);
+    return mentor;
+}
+
+const addMentors = async ({ name: generation, mentors }) => {
+    mentors = mentors.map(mentor => {
+        return  {...mentor, generation }
+    });  
+    return Mentor.insertMany(mentors);
+}
+
+module.exports = {
+    createMentor,
+    getMentor,
+    allMentors,
+    updateMentor,
+    removeMentor,
+    addMentors
+}
