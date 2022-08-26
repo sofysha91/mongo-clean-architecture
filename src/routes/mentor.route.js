@@ -1,14 +1,17 @@
 // Endpoints
 const express = require("express");
+const { auth } = require("../middlewares/auth.middleware");
 const { 
     createMentor,
     getMentor,
     allMentors,
     updateMentor,
     removeMentor
-    } = require("../usecases/mentor.usecase")
+    } = require("../usecases/mentor.usecase");
+
 
 const router = express.Router();
+//router.use(auth);
 
 router.post("/", async (request, response) => {
 
@@ -31,7 +34,7 @@ router.post("/", async (request, response) => {
     }
 });
 
-router.get("/:id", async (request, response) => {
+router.get("/:id", auth, async (request, response) => {
     try {
         // Path params
         const { params } = request;
